@@ -1,0 +1,144 @@
+***注意某些數值修改需平衡***(會導致伺服器崩潰報錯)
+
+以下有三大類別
+
+1.其他類(遊戲規則等)
+2.英雄天賦
+3.通用天賦
+
+[大小王數量]
+RoomMonsters → <SpawnMonstersRoutine>d
+
+if (rule.isBossSpawn)
+{
+    waves = 1;         // 使用 IL 指令修改王數
+    hunterChance = 0f; // 1f = 王附加獵人狀態
+    mirageChance = 0f; // 1f = 王附加幻化狀態
+}
+
+[其他類別]---------1
+
+傳送門判定
+Room_Waypoint
+
+
+調整升級公式
+Ai_RandomGemUpgrade
+
+既視感
+DoDejavuSpawn
+
+
+靈魂木偶判定 / 獎勵
+Shrine_BrokenWoodenDoll
+
+新全局倍率
+DewGameSessionSettings
+
+(研究中)
+WellKnownMembers
+StarScalingValue 
+EntityStatus
+
+商人出售技能(可添加專技)
+Loot_Skill.SelectSkillAndLevel
+
+小怪掉落星塵(機率 / 數量)
+isStardustDropDisabled
+
+幻化護盾(數值、霸體狀態)
+Se_MirageSkin
+
+yubarの無敵技能(有霸體,無敵函數)
+Se_R_Tranquility
+
+高原王の無敵技能(類) [可去除無敵]
+base.DoInvulnerable(null); //無敵狀態
+
+Se_Mon_Ink_BossDarkMoon_Eclipse
+
+Se_Mon_Ink_BossWhiteNight_Cataclysm
+
+Se_Mon_Ink_Boss_PhaseChange
+
+🌟 英雄天賦修改 - Yubar---------2
+
+基礎數值
+
+血量/防禦: 180 / 0
+物攻/魔攻: 2 / 43
+攻速/冷卻: 2.0 / 0
+暴擊/火抗: 0% / 100%
+跑速: 510%
+
+
+記憶加速
+Se_Star_Yubar_D_SkillHaste(類)
+abilityHasteFlat = base.GetValue(this.bonusAmount) * 50f;
+// 技能冷卻加快 50 倍
+
+
+魔攻
+Se_Star_Yubar_D_ADAPWithPenalty
+
+-生命 + 雙功
+Se_Star_Yubar_D_AbilityPower
+
+物攻轉魔攻
+Se_Star_Yubar_D_ConvertADToAP(類)
+this._bonus.abilityPowerFlat = base.victim.Status.attackDamage * (base.GetValue(this.ratio) * 3f);
+// 原本 (1.65x) → 調整後 3 倍
+
+🌟 英雄天賦修改 - 書書女孩
+
+地圖亮 4 格 → Se_Star_Bismuth_I_RevealWorld
+
+自動施法邏輯 → Se_Star_Bismuth_D_SkillHasteAndAutoCast
+
+🛠 通用天賦分類
+
+攻擊天賦
+
+Se_Star_Lacerta_D
+
+經營天賦
+
+Se_Star_I
+
+生存天賦
+
+Se_Star_L_Armor
+
+🔧 通用天賦---------3
+[攻擊天賦]
+Se_Star_Lacerta_D
+[經營天賦]
+Se_Star_I
+[生存天賦]
+Se_Star_L_Armor
+
+天賦+初始魔攻 → Se_Star_Lacerta_D_AbilityPower
+
+天賦+初始物攻 → Se_Star_D_AttackDamage
+
+開局金幣 → Se_Star_I_StartGold
+
+商人物品數量 → Se_Star_I_MoreShopItems
+
+player.shopAddedItems = shopAddedItems + 1; → 可改為 +3
+
+開局技能 → Se_Star_I_StartSkill
+
+商人代幣 → Se_Star_I_ShopRefreshToken
+
+寶石記憶分解倍率
+Se_Star_I_DismantleBonus(類)
+base.victim.owner.dismantleDreamDustMultiplier += base.GetValue(this.bonusRatio) * 200000f;
+// 提升至 2000 倍
+
+
+給予初始防禦力
+Se_Star_L_Armor(類)
+float num = base.GetValue(this.armorAmount);
+num *= 15f;
+base.DoArmorBoost(num);
